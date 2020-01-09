@@ -3,11 +3,11 @@
 
 namespace BowlingGameScoreCalculator.Code
 {
-    public class TenPinScoreCalculator
+    public class ScoreCalculator
     {
         private List<int> Pins { get; set; }
 
-        public TenPinScoreCalculator(List<int> pins)
+        public ScoreCalculator(List<int> pins)
         {
             Pins = pins;
         }
@@ -16,27 +16,22 @@ namespace BowlingGameScoreCalculator.Code
         {
             int score = 0;
             int throwIndex = 0;
-
+            
             for (int i = 0; i < 10; i++)
             {
                 if(IsStrike(throwIndex))
-                //if (Pins[throwIndex] == 10)
                 {
                     score += CalculateStrikeScore(throwIndex);
-                    //score += Pins[throwIndex] + Pins[throwIndex + 1] + Pins[throwIndex + 2];
                     throwIndex++;
                 }
                 else if(IsSpare(throwIndex))
-                //else if (Pins[throwIndex] + Pins[throwIndex + 1] == 10)
                 {
                     score += CalculateSpareScore(throwIndex);
-                    //score += 10 + Pins[throwIndex + 2];
                     throwIndex += 2;
                 }
                 else
                 {
                     score += CalculateStandardScore(throwIndex);
-                    //score += Pins[throwIndex] + Pins[throwIndex + 1];
                     throwIndex += 2;
                 }
             }
@@ -63,9 +58,9 @@ namespace BowlingGameScoreCalculator.Code
             //I'm calling the GetStrikeScore() here because it uses the same formula to calculate score for 
             // both Strike and Spare. Spare score could be also calculated as outlined in the commented out line listed below.
 
-            return CalculateStrikeScore(throwIndex);
+            //return CalculateStrikeScore(throwIndex);
 
-            //return 10 + KnockedDownPins[throwIndex + 2];
+            return 10 + Pins[throwIndex + 2];
             //return knockedDownPins[throwIndex] + knockedDownPins[throwIndex + 1] + knockedDownPins[throwIndex + 2];
         }
 

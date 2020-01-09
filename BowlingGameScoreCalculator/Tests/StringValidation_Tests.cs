@@ -1,11 +1,6 @@
 ﻿using BowlingGameScoreCalculator.Code;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BowlingGameScoreCalculator.Tests
 {
@@ -19,7 +14,7 @@ namespace BowlingGameScoreCalculator.Tests
         {
             var input = "";
 
-            consoleInput.ValidateStringInput(input).Should().Be("Cannot be blank or have white spaces. Please try again.\n");
+            consoleInput.ValidateStringFormat(input).Should().Be("Cannot be blank or have white spaces. Please try again.\n");
         }
 
         [TestMethod]
@@ -27,7 +22,7 @@ namespace BowlingGameScoreCalculator.Tests
         {
             var input = "                    ";
 
-            consoleInput.ValidateStringInput(input).Should().Be("Cannot be blank or have white spaces. Please try again.\n");
+            consoleInput.ValidateStringFormat(input).Should().Be("Cannot be blank or have white spaces. Please try again.\n");
         }
 
         [TestMethod]
@@ -35,7 +30,7 @@ namespace BowlingGameScoreCalculator.Tests
         {
             var input = "1234567890qwert";
 
-            consoleInput.ValidateStringInput(input).Should().Be("Entered string is either too long or too short. Please try again.\n");
+            consoleInput.ValidateStringFormat(input).Should().Be("Entered string is either too long or too short. Please try again.\n");
         }
 
         [TestMethod]
@@ -43,7 +38,7 @@ namespace BowlingGameScoreCalculator.Tests
         {
             var input = "1234567890qwert1234567890qawsedrf";
 
-            consoleInput.ValidateStringInput(input).Should().Be("Entered string is either too long or too short. Please try again.\n");
+            consoleInput.ValidateStringFormat(input).Should().Be("Entered string is either too long or too short. Please try again.\n");
         }
 
         [TestMethod]
@@ -51,7 +46,7 @@ namespace BowlingGameScoreCalculator.Tests
         {
             var input = "1234567890qwertyuiop1234567";
 
-            consoleInput.ValidateStringInput(input).Should().Be("Invalid input. Please Try again.\n");
+            consoleInput.ValidateStringFormat(input).Should().Be("Invalid input. Please Try again.\n");
         }
 
         [TestMethod]
@@ -59,7 +54,7 @@ namespace BowlingGameScoreCalculator.Tests
         {
             var input = "1234567890123456789015||";
 
-            consoleInput.ValidateStringInput(input).Should().Be("Invalid input. Please Try again.\n");
+            consoleInput.ValidateStringFormat(input).Should().Be("Invalid input. Please Try again.\n");
         }
 
         [TestMethod]
@@ -67,7 +62,7 @@ namespace BowlingGameScoreCalculator.Tests
         {
             var input = "||||||||||||||||||||||";
 
-            consoleInput.ValidateStringInput(input).Should().Be("Invalid input. Please Try again.\n");
+            consoleInput.ValidateStringFormat(input).Should().Be("Invalid input. Please Try again.\n");
         }
 
         [TestMethod]
@@ -75,7 +70,7 @@ namespace BowlingGameScoreCalculator.Tests
         {
             var input = "X|X|A|A|A|A|A|A|A|A||";
 
-            consoleInput.ValidateStringInput(input).Should().Be("Entered string contains invalid characters.\n");
+            consoleInput.ValidateStringFormat(input).Should().Be("Entered string contains invalid characters.\n");
         }
 
 
@@ -85,7 +80,7 @@ namespace BowlingGameScoreCalculator.Tests
         {
             var input = "x|x|x|x|x|x|x|x|x|x||xx";
 
-            consoleInput.ValidateStringInput(input).Should().Be(string.Empty);
+            consoleInput.ValidateStringFormat(input).Should().Be(string.Empty);
         }
 
         [TestMethod]
@@ -93,7 +88,7 @@ namespace BowlingGameScoreCalculator.Tests
         {
             var input = "5-|7/|9-|X|-8|8/|-6|X|X|5-||";
 
-            consoleInput.ValidateStringInput(input).Should().Be(string.Empty);
+            consoleInput.ValidateStringFormat(input).Should().Be(string.Empty);
         }
     }
 }

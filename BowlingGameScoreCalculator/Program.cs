@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace BowlingGameScoreCalculator
 {
+    /// <summary>
+    /// Basic validations have been added but I asume that string wil be in valid format.
+    /// </summary>
     public class Program
     {
         static void Main(string[] args)
@@ -33,7 +36,7 @@ namespace BowlingGameScoreCalculator
             var listExamples = new List<string>
             {
                 "X|7/|9-|X|-8|8/|-6|X|X|X||81",
-                "X|X|X|X|X|X|X|X|X|X||XX",
+                "X|X|X|X|X|X|X|X|X|9||XX",
                 "9-|9-|9-|9-|9-|9-|9-|9-|9-|9-||",
                 "5/|5/|5/|5/|5/|5/|5/|5/|5/|5/||5",
                 "5-|7/|9-|X|-8|8/|-6|X|X|X||81",
@@ -60,14 +63,10 @@ namespace BowlingGameScoreCalculator
             }
             while (!ValidateUserInput(consoleInput));
 
-            // Option #1
-            //var convertInput = new ConvertConsoleInput(consoleInput);
-
-            //Option #2
             var convertInput = new ConsoleInputConverter();
             var convertedInput = convertInput.ConvertToPinsKnockedDown(consoleInput);
 
-            var calculateScore = new TenPinScoreCalculator(convertedInput);
+            var calculateScore = new ScoreCalculator(convertedInput);
 
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine($"Total Score: {calculateScore.CalculateScore()}");
@@ -77,7 +76,7 @@ namespace BowlingGameScoreCalculator
         static bool ValidateUserInput(string userInput)
         {
             var validateString = new ConsoleInputValidator();
-            var output = validateString.ValidateStringInput(userInput);
+            var output = validateString.ValidateStringFormat(userInput);
 
             if (!string.IsNullOrEmpty(output))
             {

@@ -57,7 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Code\ConsoleInputConverter.cs" />
-    <Compile Include="Code\TenPinScoreCalculator.cs" />
+    <Compile Include="Code\ScoreCalculator.cs" />
     <Compile Include="Code\ConsoleInputValidator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
