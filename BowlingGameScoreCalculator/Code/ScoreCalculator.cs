@@ -7,9 +7,9 @@ namespace BowlingGameScoreCalculator.Code
     {
         private List<int> Pins { get; set; }
 
-        public ScoreCalculator(List<int> pins)
+        public ScoreCalculator(string stringGameInput) 
         {
-            Pins = pins;
+            Pins = new ConsoleInputConverter(stringGameInput).ConvertToPinsKnockedDown();
         }
 
         public int CalculateScore()
@@ -55,13 +55,10 @@ namespace BowlingGameScoreCalculator.Code
         // The score for the Spare frame is ten plus the number of pins knocked down in the next ball. 
         private int CalculateSpareScore(int throwIndex)
         {
-            //I'm calling the GetStrikeScore() here because it uses the same formula to calculate score for 
-            // both Strike and Spare. Spare score could be also calculated as outlined in the commented out line listed below.
-
-            //return CalculateStrikeScore(throwIndex);
-
+            // When calculating the score, I'm on the first ball of the frame, the sum of current ball and the second ball 
+            // would ten and in order to satisfy Spare i have to jusp over a second ball of current frame and grab first ball
+            // of next ball. 
             return 10 + Pins[throwIndex + 2];
-            //return knockedDownPins[throwIndex] + knockedDownPins[throwIndex + 1] + knockedDownPins[throwIndex + 2];
         }
 
 

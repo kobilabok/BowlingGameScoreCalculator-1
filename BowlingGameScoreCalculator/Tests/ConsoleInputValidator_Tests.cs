@@ -1,4 +1,5 @@
 ﻿using BowlingGameScoreCalculator.Code;
+using BowlingGameScoreCalculator.Exceptions;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -17,7 +18,7 @@ namespace BowlingGameScoreCalculator.Tests
 
             Action act = () => consoleInput.ValidateStringFormat(input);
 
-            act.Should().Throw<Exception>()
+            act.Should().Throw<InvalidInputException>()
                 .WithMessage("Cannot be blank or have white spaces. Please try again.");
         }
 
@@ -28,7 +29,7 @@ namespace BowlingGameScoreCalculator.Tests
 
             Action act = () => consoleInput.ValidateStringFormat(input);
 
-            act.Should().Throw<Exception>()
+            act.Should().Throw<InvalidInputException>()
                 .WithMessage("Cannot be blank or have white spaces. Please try again.");
         }
 
@@ -39,7 +40,7 @@ namespace BowlingGameScoreCalculator.Tests
 
             Action act = () => consoleInput.ValidateStringFormat(input);
 
-            act.Should().Throw<Exception>()
+            act.Should().Throw<InvalidInputException>()
                 .WithMessage("Entered string is either too long or too short. Please try again.");
         }
 
@@ -50,7 +51,7 @@ namespace BowlingGameScoreCalculator.Tests
 
             Action act = () => consoleInput.ValidateStringFormat(input);
 
-            act.Should().Throw<Exception>()
+            act.Should().Throw<InvalidInputException>()
                 .WithMessage("Entered string is either too long or too short. Please try again.");
         }
 
@@ -61,19 +62,8 @@ namespace BowlingGameScoreCalculator.Tests
 
             Action act = () => consoleInput.ValidateStringFormat(input);
 
-            act.Should().Throw<Exception>()
+            act.Should().Throw<InvalidInputException>()
                 .WithMessage("Entered string is either too long or too short. Please try again.");
-        }
-
-        [TestMethod]
-        public void Validate_AllowedRangeWithBarSymbolsOnlyString_MessageExpected()
-        {
-            var input = "||||||||||||||||||||||";
-
-            Action act = () => consoleInput.ValidateStringFormat(input);
-
-            act.Should().Throw<Exception>()
-                .WithMessage("The number of frames is not correct.");
         }
 
         [TestMethod]
@@ -83,7 +73,7 @@ namespace BowlingGameScoreCalculator.Tests
 
             Action act = () => consoleInput.ValidateStringFormat(input);
 
-            act.Should().Throw<Exception>()
+            act.Should().Throw<InvalidInputException>()
                 .WithMessage("Entered string contains invalid characters.");
         }
 
@@ -115,40 +105,51 @@ namespace BowlingGameScoreCalculator.Tests
 
             Action act = () => consoleInput.ValidateStringFormat(input);
 
-            act.Should().Throw<Exception>()
-                .WithMessage("Frame cannot start with '/' symbol.");
+            act.Should().Throw<InvalidInputException>()
+                .WithMessage("Entered string starts with invalid character.");
         }
 
         [TestMethod]
         public void Validate_FrameCantStartWith_BarSymbol()
         {
-            var input = "|19|9-|X|-8|8/|-6|X|X|X||XX";
+            var input = "|--|--|--|--|--|--|--|--|--||";
 
             Action act = () => consoleInput.ValidateStringFormat(input);
 
-            act.Should().Throw<Exception>()
-                .WithMessage("Sum of regular frame cannot exceed 10 points.");
+            act.Should().Throw<InvalidInputException>()
+                .WithMessage("Entered string starts with invalid character.");
         }
 
         [TestMethod]
         public void Validate_FrameCantHaveMoreThanOne_X()
         {
-            var input = "X|7/|9-|XX|-8|8/|-6|X|X|9-||";
+            var input = "--|XX|--|--|--|--|--|--|--|--||";
 
             Action act = () => consoleInput.ValidateStringFormat(input);
 
-            act.Should().Throw<Exception>()
+            act.Should().Throw<InvalidInputException>()
                 .WithMessage("Regular frame cannot contain an 'X' and another symbol.");
+        }
+
+        [TestMethod]
+        public void Validate_FrameCantHaveOneCharacterIfItIsNot_X()
+        {
+            var input = "--|8|--|--|--|--|--|--|--|--||";
+
+            Action act = () => consoleInput.ValidateStringFormat(input);
+
+            act.Should().Throw<InvalidInputException>()
+                .WithMessage("Frame is missing characters.");
         }
 
         [TestMethod]
         public void Validate_FrameScoreCantExceedTen()
         {
-            var input = "999|77|93||-8|8/|-6|X|X|9-||";
+            var input = "--|99|--|--|--|--|--|--|--|--||";
 
             Action act = () => consoleInput.ValidateStringFormat(input);
 
-            act.Should().Throw<Exception>()
+            act.Should().Throw<InvalidInputException>()
                 .WithMessage("Sum of regular frame cannot exceed 10 points.");
         }
 
@@ -159,7 +160,7 @@ namespace BowlingGameScoreCalculator.Tests
 
             Action act = () => consoleInput.ValidateStringFormat(input);
 
-            act.Should().Throw<Exception>()
+            act.Should().Throw<InvalidInputException>()
                 .WithMessage("Frame cannot start with '/' symbol.");
         }
 
@@ -170,7 +171,7 @@ namespace BowlingGameScoreCalculator.Tests
 
             Action act = () => consoleInput.ValidateStringFormat(input);
 
-            act.Should().NotThrow<Exception>();
+            act.Should().NotThrow<InvalidInputException>();
         }
 
         [TestMethod]
@@ -180,8 +181,25 @@ namespace BowlingGameScoreCalculator.Tests
 
             Action act = () => consoleInput.ValidateStringFormat(input);
 
-            act.Should().Throw<Exception>()
+            act.Should().Throw<InvalidInputException>()
                 .WithMessage("Bonus frame cannot start with spare symbol.");
+        }
+
+        [TestMethod]
+        public void Validate_StringCannotExceedElevenFrames()
+        {
+            var input = "X|X|X|X|X|X|X|X|X|X|X|X|X||XX";
+
+            Action act = () => consoleInput.ValidateStringFormat(input);
+
+            act.Should().Throw<InvalidInputException>()
+                .WithMessage("The number of frames is not correct.");
+
+            //var convertInput = new ConsoleInputConverter();
+
+            //var game = new ScoreCalculator(convertInput.ConvertToPinsKnockedDown(stringInput));
+
+            //game.CalculateScore().Should().Be(300);
         }
     }
 }

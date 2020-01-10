@@ -12,19 +12,17 @@ namespace BowlingGameScoreCalculator.Tests
         {
             var stringInput = "--|--|--|--|--|--|--|--|--|--||";
 
-            var convertInput = new ConsoleInputConverter();
-            var game = new ScoreCalculator(convertInput.ConvertToPinsKnockedDown(stringInput));
+            var game = new ScoreCalculator(stringInput);
 
             game.CalculateScore().Should().Be(0);
         }
 
         [TestMethod]
-        public void RollMissAndSpareInSameFrame_ExpectedScore_Zero()
+        public void RollMissAndSpareInSameFrame_ExpectedScore_50()
         {
             var stringInput = "-/|X|X|--|--|--|--|--|--|--||";
 
-            var convertInput = new ConsoleInputConverter();
-            var game = new ScoreCalculator(convertInput.ConvertToPinsKnockedDown(stringInput));
+            var game = new ScoreCalculator(stringInput);
 
             game.CalculateScore().Should().Be(50);
         }
@@ -34,8 +32,7 @@ namespace BowlingGameScoreCalculator.Tests
         {
             var stringInput = "11|11|11|11|11|11|11|11|11|11||";
 
-            var convertInput = new ConsoleInputConverter();
-            var game = new ScoreCalculator(convertInput.ConvertToPinsKnockedDown(stringInput));
+            var game = new ScoreCalculator(stringInput);
 
             game.CalculateScore().Should().Be(20);
         }
@@ -45,8 +42,7 @@ namespace BowlingGameScoreCalculator.Tests
         {
             var stringInput = "X|X|X|X|X|X|X|X|X|X||XX";
 
-            var convertInput = new ConsoleInputConverter();
-            var game = new ScoreCalculator(convertInput.ConvertToPinsKnockedDown(stringInput));
+            var game = new ScoreCalculator(stringInput);
 
             game.CalculateScore().Should().Be(300);
         }
@@ -56,8 +52,7 @@ namespace BowlingGameScoreCalculator.Tests
         {
             var stringInput = "9-|9-|9-|9-|9-|9-|9-|9-|9-|9-||";
 
-            var convertInput = new ConsoleInputConverter();
-            var game = new ScoreCalculator(convertInput.ConvertToPinsKnockedDown(stringInput));
+            var game = new ScoreCalculator(stringInput);
 
             game.CalculateScore().Should().Be(90);
         }
@@ -67,8 +62,7 @@ namespace BowlingGameScoreCalculator.Tests
         {
             var stringInput = "5/|5/|5/|5/|5/|5/|5/|5/|5/|5/||5";
 
-            var convertInput = new ConsoleInputConverter();
-            var game = new ScoreCalculator(convertInput.ConvertToPinsKnockedDown(stringInput));
+            var game = new ScoreCalculator(stringInput);
 
             game.CalculateScore().Should().Be(150);
         }
@@ -78,8 +72,7 @@ namespace BowlingGameScoreCalculator.Tests
         {
             var stringInput = "X|7/|9-|X|-8|8/|-6|X|X|X||81";
 
-            var convertInput = new ConsoleInputConverter();
-            var game = new ScoreCalculator(convertInput.ConvertToPinsKnockedDown(stringInput));
+            var game = new ScoreCalculator(stringInput);
 
             game.CalculateScore().Should().Be(167);
         }
@@ -89,8 +82,7 @@ namespace BowlingGameScoreCalculator.Tests
         {
             var stringInput = "5-|7/|9-|X|-8|8/|-6|X|X|5-||";
 
-            var convertInput = new ConsoleInputConverter();
-            var game = new ScoreCalculator(convertInput.ConvertToPinsKnockedDown(stringInput));
+            var game = new ScoreCalculator(stringInput);
 
             game.CalculateScore().Should().Be(120);
         }
@@ -100,8 +92,7 @@ namespace BowlingGameScoreCalculator.Tests
         {
             var stringInput = "X|7/|9-|X|-8|8/|-6|X|X|X||XX";
 
-            var convertInput = new ConsoleInputConverter();
-            var game = new ScoreCalculator(convertInput.ConvertToPinsKnockedDown(stringInput));
+            var game = new ScoreCalculator(stringInput);
 
             game.CalculateScore().Should().Be(180);
         }

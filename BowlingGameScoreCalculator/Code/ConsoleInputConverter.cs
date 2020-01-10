@@ -8,13 +8,18 @@ namespace BowlingGameScoreCalculator.Code
         /// <summary>
         /// This class takes string in a valid format from the console and converts it into a list of integers.
         /// </summary>
-    
         readonly List<int> pins = new List<int>();
+        public string InputGameString { get; set; }
 
-        public List<int> ConvertToPinsKnockedDown(string consoleInput)
+        public ConsoleInputConverter(string consoleInput)
         {
+            new ConsoleInputValidator().ValidateStringFormat(consoleInput);
+            InputGameString = consoleInput;
+        }
 
-            char[] chars = consoleInput.ToCharArray();
+        public List<int> ConvertToPinsKnockedDown()
+        {
+            char[] chars = InputGameString.ToCharArray();
 
             for (int i = 0; i < chars.Length; i++)
             {
@@ -39,6 +44,6 @@ namespace BowlingGameScoreCalculator.Code
             return pins;
         }
 
-        private int ConvertCharToInt(Char value) => (int)(Char.GetNumericValue(value));
+        private int ConvertCharToInt(Char value) => (int)(Char.GetNumericValue(value == '-' ? '0' : value));
     }
 }

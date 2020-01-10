@@ -1,4 +1,5 @@
 ﻿using BowlingGameScoreCalculator.Code;
+using BowlingGameScoreCalculator.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,38 +57,30 @@ namespace BowlingGameScoreCalculator
         {
             string consoleInput;
 
-            do
-            {
-                Console.Write("List of pins: ");
-                consoleInput = Console.ReadLine();
-            }
-            while (!ValidateUserInput(consoleInput));
-
-            var convertInput = new ConsoleInputConverter();
-            var convertedInput = convertInput.ConvertToPinsKnockedDown(consoleInput);
-
-            var calculateScore = new ScoreCalculator(convertedInput);
-
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"Total Score: {calculateScore.CalculateScore()}");
-            Console.ResetColor();
-        }
-
-        static bool ValidateUserInput(string userInput)
-        {
-            var validateString = new ConsoleInputValidator();
-
             try
             {
-                validateString.ValidateStringFormat(userInput);
+                Console.Write("List of pins: ");
+
+                consoleInput = Console.ReadLine();
+                var getScore = new ScoreCalculator(consoleInput);
+
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"Total Score: {getScore.CalculateScore()}");
+            }
+            catch (InvalidInputException ex)
+            {
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                Console.WriteLine($"Input error: {ex.Message}");
             }
             catch (Exception ex)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine(ex.Message);
             }
-
-            return true;
+            finally
+            {
+                Console.ResetColor();
+            }
         }
 
         static bool ShouldCalculateAnotherGame()
