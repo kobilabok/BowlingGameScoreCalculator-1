@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace BowlingGameScoreCalculator.Tests
 {
     [TestClass]
-    public class StringValidation_Tests
+    public class ConsoleInputValidator_Tests
     {
         private readonly ConsoleInputValidator consoleInput = new ConsoleInputValidator();
 

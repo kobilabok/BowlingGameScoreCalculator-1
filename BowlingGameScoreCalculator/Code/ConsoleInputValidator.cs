@@ -4,9 +4,9 @@ using System.Linq;
 
 namespace BowlingGameScoreCalculator.Code
 {
-    /// <summary>
-    /// This class validates some invalid cases.
-    /// </summary>
+	/// <summary>
+	/// This class validates some cases for the invalid input.
+	/// </summary>
 	public class ConsoleInputValidator
 	{
 		public string ValidateStringFormat(string consoleInput)
@@ -14,7 +14,7 @@ namespace BowlingGameScoreCalculator.Code
 			// Converts to upper case
 			var input = consoleInput.ToUpper();
 
-            var validChars = new List<char>() { 'X', '|', '-', '/', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+			var validChars = new List<char>() { 'X', '|', '-', '/', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
 			var validStarter = new List<char>() { 'X', '-', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
 
 			// Cannot be NULL or Empty
@@ -29,8 +29,8 @@ namespace BowlingGameScoreCalculator.Code
 				return "Entered string is either too long or too short. Please try again.\n";
 			}
 
-            // Should contains eleven '|' symbols
-            int countBarSymbols = 0;
+			// Should contains eleven '|' symbols
+			int countBarSymbols = 0;
 			for (int i = 0; i < input.Length; i++)
 			{
 				if (input[i] == '|')
@@ -56,23 +56,21 @@ namespace BowlingGameScoreCalculator.Code
 			// Should start with one of the defined allowed characters
 			if (!validStarter.Contains(input[0]))
 			{
-				return "Entered string can't start with this character.\n";
+				return "Entered string can not start with this character.\n";
 			}
 
+			// Frame can only have one Spare symbol in one frame including the bonus frame
+			var marks = input.Split('|');
+			if (marks.Any(x => x.Contains("//")))
+			{
+				return "Entered string contains two '/' symbols in one frame.\n";
+			}
 
-            // Frame can only have one Spare symbol in one frame including the bonus frame
-            var marks = input.Split('|');
-            if (marks.Any(x => x.Contains("//")))
-            {
-                return "Entered string contains two '/' symbols in one frame.\n";
-            }
+			// Frame can only have one Strike symbol. This should still be valid for the bonus frame.
+			var bonusFrameIndex = input.LastIndexOf("||", StringComparison.Ordinal);
+			var regularFrames = input.Substring(0, bonusFrameIndex);
 
-
-            // Frame can only have one Strike symbol.This should still be valid for the bonus frame.
-            var bonusFrameIndex = input.LastIndexOf("||", StringComparison.Ordinal);
-            var regularFrames = input.Substring(0, bonusFrameIndex);
-
-            marks = regularFrames.Split('|');
+			marks = regularFrames.Split('|');
 
 			for (int i = 0; i < input.Length; i++)
 			{
@@ -82,10 +80,10 @@ namespace BowlingGameScoreCalculator.Code
 				}
 			}
 
-            // Frame sum can not exceed ten points in one frame. However, bonus frame can be greater than 10.
-            marks = regularFrames.Split('|');
+			// Frame sum can not exceed ten points in one frame. However, bonus frame can be greater than 10.
+			marks = regularFrames.Split('|');
 
-            if (marks.Any(x => int.TryParse(x, out var value) && value > 10))
+			if (marks.Any(x => int.TryParse(x, out var value) && value > 10))
 			{
 				return "Sum of one frame can not exceed 10 points.\n";
 			}

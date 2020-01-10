@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace BowlingGameScoreCalculator
 {
     /// <summary>
-    /// Basic validations have been added but I asume that string wil be in valid format.
+    /// Basic validations have been added but I assume that string will be in valid format.
     /// </summary>
     public class Program
     {
@@ -36,7 +36,7 @@ namespace BowlingGameScoreCalculator
             var listExamples = new List<string>
             {
                 "X|7/|9-|X|-8|8/|-6|X|X|X||81",
-                "X|X|X|X|X|X|X|X|X|9||XX",
+                "X|X|X|X|X|X|X|X|X|X||XX",
                 "9-|9-|9-|9-|9-|9-|9-|9-|9-|9-||",
                 "5/|5/|5/|5/|5/|5/|5/|5/|5/|5/||5",
                 "5-|7/|9-|X|-8|8/|-6|X|X|X||81",
@@ -113,7 +113,9 @@ namespace BowlingGameScoreCalculator
                     }
                 }
 
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Invalid selection. Please Try again.");
+                Console.ResetColor();
             }
 
             return quit;
