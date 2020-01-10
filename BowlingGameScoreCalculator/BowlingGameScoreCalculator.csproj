@@ -61,15 +61,16 @@
     <Compile Include="Code\ConsoleInputValidator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tests\FrameValidation_Tests.cs" />
     <Compile Include="Tests\ConsoleInputValidator_Tests.cs" />
-    <Compile Include="Tests\TenPinScoreCalculator_Tests.cs" />
+    <Compile Include="Tests\ScoreCalculator_Tests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Exceptions\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

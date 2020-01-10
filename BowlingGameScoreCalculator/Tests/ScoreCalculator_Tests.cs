@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace BowlingGameScoreCalculator.Tests
 {
     [TestClass]
-    public class TenPinScoreCalculator_Tests
+    public class ScoreCalculator_Tests
     {
         [TestMethod]
         public void RollGutterGame_ExpectedScore_Zero()
@@ -16,6 +16,17 @@ namespace BowlingGameScoreCalculator.Tests
             var game = new ScoreCalculator(convertInput.ConvertToPinsKnockedDown(stringInput));
 
             game.CalculateScore().Should().Be(0);
+        }
+
+        [TestMethod]
+        public void RollMissAndSpareInSameFrame_ExpectedScore_Zero()
+        {
+            var stringInput = "-/|X|X|--|--|--|--|--|--|--||";
+
+            var convertInput = new ConsoleInputConverter();
+            var game = new ScoreCalculator(convertInput.ConvertToPinsKnockedDown(stringInput));
+
+            game.CalculateScore().Should().Be(50);
         }
 
         [TestMethod]

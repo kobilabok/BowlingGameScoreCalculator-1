@@ -9,7 +9,7 @@ namespace BowlingGameScoreCalculator.Code
 	/// </summary>
 	public class ConsoleInputValidator
 	{
-		public string ValidateStringFormat(string consoleInput)
+		public void ValidateStringFormat(string consoleInput)
 		{
 			// Converts to upper case
 			var input = consoleInput.ToUpper();
@@ -17,17 +17,21 @@ namespace BowlingGameScoreCalculator.Code
 			var validChars = new List<char>() { 'X', '|', '-', '/', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
 			var validStarter = new List<char>() { 'X', '-', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
 
+
+
 			// Cannot be NULL or Empty
 			if (string.IsNullOrWhiteSpace(input))
 			{
-				return "Cannot be blank or have white spaces. Please try again.\n";
+                throw new Exception("Cannot be blank or have white spaces. Please try again.");
 			}
 
 			// Should meet expected length 
 			if (input.Length < 21 || input.Length > 32)
 			{
-				return "Entered string is either too long or too short. Please try again.\n";
-			}
+                //return "Entered string is either too long or too short. Please try again.\n";
+                throw new Exception("Entered string is either too long or too short. Please try again.");
+            }
+
 
 			// Should contains eleven '|' symbols
 			int countBarSymbols = 0;
@@ -41,54 +45,75 @@ namespace BowlingGameScoreCalculator.Code
 
 			if (countBarSymbols != 11)
 			{
-				return "Invalid input. Please Try again.\n";
-			}
+                throw new Exception("The number of frames is not correct.");
+            }
 
 			// Should only contains defined valid characters
 			foreach (char item in input)
 			{
 				if (!validChars.Contains(item))
 				{
-					return "Entered string contains invalid characters.\n";
-				}
+                    throw new Exception("Entered string contains invalid characters.");
+                }
 			}
 
-			// Should start with one of the defined allowed characters
-			if (!validStarter.Contains(input[0]))
-			{
-				return "Entered string can not start with this character.\n";
-			}
+            // Frame validations:
+            var bonusFrameIndex = input.LastIndexOf("||", StringComparison.Ordinal);
+            var regularFramesString = input.Substring(0, bonusFrameIndex);
+            var bonusFrameString = input.Substring(bonusFrameIndex + 2);
 
-			// Frame can only have one Spare symbol in one frame including the bonus frame
-			var marks = input.Split('|');
-			if (marks.Any(x => x.Contains("//")))
-			{
-				return "Entered string contains two '/' symbols in one frame.\n";
-			}
-
-			// Frame can only have one Strike symbol. This should still be valid for the bonus frame.
-			var bonusFrameIndex = input.LastIndexOf("||", StringComparison.Ordinal);
-			var regularFrames = input.Substring(0, bonusFrameIndex);
-
-			marks = regularFrames.Split('|');
-
-			for (int i = 0; i < input.Length; i++)
-			{
-				if (marks.Any(x => x.Contains("XX")))
-				{
-					return "Entered string contains two 'X' in one frame.\n";
-				}
-			}
-
-			// Frame sum can not exceed ten points in one frame. However, bonus frame can be greater than 10.
-			marks = regularFrames.Split('|');
-
-			if (marks.Any(x => int.TryParse(x, out var value) && value > 10))
-			{
-				return "Sum of one frame can not exceed 10 points.\n";
-			}
-
-			return string.Empty;
+            ValidateRegularFrame(regularFramesString);
+            ValidateBonusFrame(bonusFrameString);
 		}
+
+		private void ValidateRegularFrame(string regularFrame)
+        {
+            // Frame cannot start with the Spare symbol
+            var marks = regularFrame.Split('|');
+
+            if (marks.Any(x => x.StartsWith("/")))
+            {
+                throw new Exception("Frame cannot start with '/' symbol.");
+            }
+
+            // Regular frame cannot have an 'X' and another symbol
+            for (int i = 0; i < regularFrame.Length; i++)
+            {
+                if (marks.Any(x => x.Contains("X") && x.Length > 1))
+                {
+                    throw new Exception("Regular frame cannot contain an 'X' and another symbol.");
+                }
+            }
+
+            // Regular frame sum cannot exceed ten points
+            if (marks.Any(x => int.TryParse(x, out var value) && value > 10))
+            {
+                throw new Exception("Sum of regular frame cannot exceed 10 points.");
+            }
+        }
+
+        private string ValidateBonusFrame(string bonusFrame)
+        {
+            // Bonus frame cannot start with bonus symbol
+            if (bonusFrame.Length > 0)
+            {
+                if (bonusFrame[0] == '/')
+                {
+                    throw new Exception("Bonus frame cannot start with spare symbol.");
+                }
+            }
+
+            // Bonus frame cannot start with Spare symbol
+
+            //However, bonus frame can be greater than 10.
+            //marks = regularFrames.Split('|');
+
+            return string.Empty;
+        }
+
+        private void ValidateFirstCharacterIsntSpareSymbol()
+        {
+
+        }
 	}
 }

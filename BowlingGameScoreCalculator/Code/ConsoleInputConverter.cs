@@ -9,7 +9,7 @@ namespace BowlingGameScoreCalculator.Code
         /// This class takes string in a valid format from the console and converts it into a list of integers.
         /// </summary>
     
-        readonly List<int> pins = new List<int>(21);
+        readonly List<int> pins = new List<int>();
 
         public List<int> ConvertToPinsKnockedDown(string consoleInput)
         {

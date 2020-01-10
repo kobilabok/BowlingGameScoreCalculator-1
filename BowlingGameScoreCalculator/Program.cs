@@ -76,12 +76,15 @@ namespace BowlingGameScoreCalculator
         static bool ValidateUserInput(string userInput)
         {
             var validateString = new ConsoleInputValidator();
-            var output = validateString.ValidateStringFormat(userInput);
 
-            if (!string.IsNullOrEmpty(output))
+            try
             {
-                Console.WriteLine(output);
-                return false;
+                validateString.ValidateStringFormat(userInput);
+            }
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(ex.Message);
             }
 
             return true;
