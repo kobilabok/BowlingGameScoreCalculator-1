@@ -19,7 +19,7 @@ namespace BowlingGameScoreCalculator.Tests
 
             Action act = () => validator.ValidateGameInputFormat(gameInput);
 
-            act.Should().Throw<InvalidInputException>()
+            act.Should().Throw<InvalidGameInputException>()
                 .WithMessage("Game input cannot be blank or have white spaces. Please try again.");
         }
 
@@ -30,7 +30,7 @@ namespace BowlingGameScoreCalculator.Tests
 
             Action act = () => validator.ValidateGameInputFormat(gameInput);
 
-            act.Should().Throw<InvalidInputException>()
+            act.Should().Throw<InvalidGameInputException>()
                 .WithMessage("Game input cannot be blank or have white spaces. Please try again.");
         }
 
@@ -41,7 +41,7 @@ namespace BowlingGameScoreCalculator.Tests
 
             Action act = () => validator.ValidateGameInputFormat(gameInput);
 
-            act.Should().Throw<InvalidInputException>()
+            act.Should().Throw<InvalidGameInputException>()
                 .WithMessage("Entered string contains invalid characters. Please check your string and try again.");
         }
 
@@ -52,7 +52,7 @@ namespace BowlingGameScoreCalculator.Tests
 
             Action act = () => validator.ValidateGameInputFormat(gameInput);
 
-            act.Should().Throw<InvalidInputException>()
+            act.Should().Throw<InvalidGameInputException>()
                 .WithMessage("Entered string is in invalid format. Please check your string and try again.");
         }
 
@@ -87,7 +87,7 @@ namespace BowlingGameScoreCalculator.Tests
 
             Action act = () => validator.ValidateGameInputFormat(gameInput);
 
-            act.Should().Throw<InvalidInputException>()
+            act.Should().Throw<InvalidGameInputException>()
                 .WithMessage("Entered string starts with invalid character. Please check your string and try again.");
         }
 
@@ -98,7 +98,7 @@ namespace BowlingGameScoreCalculator.Tests
 
             Action act = () => validator.ValidateGameInputFormat(gameInput);
 
-            act.Should().Throw<InvalidInputException>()
+            act.Should().Throw<InvalidGameInputException>()
                 .WithMessage("Entered string starts with invalid character. Please check your string and try again.");
         }
 
@@ -109,7 +109,7 @@ namespace BowlingGameScoreCalculator.Tests
 
             Action act = () => validator.ValidateGameInputFormat(gameInput);
 
-            act.Should().Throw<InvalidInputException>()
+            act.Should().Throw<InvalidGameInputException>()
                 .WithMessage("Regular frame cannot contain an 'X' and another symbol. Please check your string and try again.");
         }
 
@@ -120,7 +120,7 @@ namespace BowlingGameScoreCalculator.Tests
 
             Action act = () => validator.ValidateGameInputFormat(gameInput);
 
-            act.Should().Throw<InvalidInputException>()
+            act.Should().Throw<InvalidGameInputException>()
                 .WithMessage("Frame is missing characters. Please check your string and try again.");
         }
 
@@ -131,7 +131,7 @@ namespace BowlingGameScoreCalculator.Tests
 
             Action act = () => validator.ValidateGameInputFormat(gameInput);
 
-            act.Should().Throw<InvalidInputException>()
+            act.Should().Throw<InvalidGameInputException>()
                 .WithMessage("Sum of regular frame cannot exceed 10 points. Please check your string and try again.");
         }
 
@@ -142,7 +142,7 @@ namespace BowlingGameScoreCalculator.Tests
 
             Action act = () => validator.ValidateGameInputFormat(gameInput);
 
-            act.Should().Throw<InvalidInputException>()
+            act.Should().Throw<InvalidGameInputException>()
                 .WithMessage("Frame cannot start with '/' symbol. Please check your string and try again.");
         }
 
@@ -157,7 +157,7 @@ namespace BowlingGameScoreCalculator.Tests
 
             Action act = () => validator.ValidateGameInputFormat(gameInput);
 
-            act.Should().NotThrow<InvalidInputException>();
+            act.Should().NotThrow<InvalidGameInputException>();
         }
 
         [TestMethod]
@@ -167,7 +167,7 @@ namespace BowlingGameScoreCalculator.Tests
 
             Action act = () => validator.ValidateGameInputFormat(gameInput);
 
-            act.Should().Throw<InvalidInputException>()
+            act.Should().Throw<InvalidGameInputException>()
                 .WithMessage("Bonus frame cannot start with spare symbol. Please check your string and try again.");
         }
 
@@ -178,7 +178,7 @@ namespace BowlingGameScoreCalculator.Tests
 
             Action act = () => validator.ValidateGameInputFormat(gameInput);
 
-            act.Should().Throw<InvalidInputException>()
+            act.Should().Throw<InvalidGameInputException>()
                 .WithMessage("Bonus frame cannot have more than two chatacters. Please check your string and try again.");
         }
     }

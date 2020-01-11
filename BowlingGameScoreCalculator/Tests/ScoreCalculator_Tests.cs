@@ -34,7 +34,6 @@ namespace BowlingGameScoreCalculator.Tests
             gameScore.Should().Be(20);
         }
 
-
         [TestMethod]
         public void RollAllStrike_ExpectedScore_300()
         {

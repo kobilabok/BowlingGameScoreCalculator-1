@@ -59,7 +59,7 @@
     <Compile Include="Code\ConsoleInputConverter.cs" />
     <Compile Include="Code\ScoreCalculator.cs" />
     <Compile Include="Code\ConsoleInputValidator.cs" />
-    <Compile Include="CustomExceptions\InvalidInputException.cs" />
+    <Compile Include="CustomExceptions\InvalidGameInputException.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tests\ConsoleInputValidator_Tests.cs" />

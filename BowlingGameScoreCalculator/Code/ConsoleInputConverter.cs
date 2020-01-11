@@ -6,7 +6,7 @@ namespace BowlingGameScoreCalculator.Code
     public class ConsoleInputConverter
     {
         /// <summary>
-        /// This class takes game string in the valid format and converts it into a list of integers.
+        /// This class takes game string in valid format and converts it into a list of integers.
         /// </summary>
         readonly List<int> pins = new List<int>();
         public List<int> ConvertToPinsKnockedDown(string gameInput)
