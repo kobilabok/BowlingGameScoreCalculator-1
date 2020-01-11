@@ -6,122 +6,145 @@ using System.Linq;
 namespace BowlingGameScoreCalculator.Code
 {
     /// <summary>
-    /// This class validates some cases for the invalid input.
+    /// This class validates game string format.
     /// </summary>
     public class ConsoleInputValidator
     {
-        public void ValidateStringFormat(string consoleInput)
+        public void ValidateGameInputFormat(string consoleInput)
         {
             // Converts to upper case
-            var input = consoleInput.ToUpper();
+            var gameInput = consoleInput.ToUpper();
 
             // String cannot be NULL or Empty
-            if (string.IsNullOrWhiteSpace(input))
+            if (string.IsNullOrWhiteSpace(gameInput))
             {
-                throw new InvalidInputException("Cannot be blank or have white spaces. Please try again.");
+                throw new InvalidInputException("Game input cannot be blank or have white spaces. Please try again.");
             }
 
-            // String should meet expected length 
-            if (input.Length < 21 || input.Length > 32)
-            {
-                throw new InvalidInputException("Entered string is either too long or too short. Please try again.");
-            }
+            // Validate that game string only contains valid characters 
+            ValidateInputCharacters(gameInput);
 
-            ValidateInputCharacters(input);
+            // Validate number of frames in game string
+            ValidateNumberOfFrames(gameInput);
 
-            ValidateNumberOfFrames(input);
+            // Validate first character in game string
+            ValidateFirstCharacter(gameInput);
 
-            ValidateFirstCharacter(input);
+            // Separate regular and bonus frames
+            var bonusFrameIndex = gameInput.LastIndexOf("||", StringComparison.Ordinal);
+            var regularFrameString = gameInput.Substring(0, bonusFrameIndex);
+            var bonusFrameString = gameInput.Substring(bonusFrameIndex + 2);
 
-            // Frame validations:
-            var bonusFrameIndex = input.LastIndexOf("||", StringComparison.Ordinal);
-            var regularFramesString = input.Substring(0, bonusFrameIndex);
-            var bonusFrameString = input.Substring(bonusFrameIndex + 2);
+            // Validate regular frame
+            ValidateRegularFrame(regularFrameString);
 
-            ValidateRegularFrame(regularFramesString);
-
+            // Validate bonus frame
             ValidateBonusFrame(bonusFrameString);
         }
 
-        private static void ValidateInputCharacters(string input)
+        private static void ValidateInputCharacters(string gameInput)
         {
-            var validChars = new List<char>() { 'X', '|', '-', '/', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+            var validCharacters = new List<char>() { 'X', '|', '-', '/', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
 
-            foreach (char item in input)
+            foreach (char character in gameInput)
             {
-                if (!validChars.Contains(item))
+                if (!validCharacters.Contains(character))
                 {
-                    throw new InvalidInputException("Entered string contains invalid characters.");
+                    throw new InvalidInputException("Entered string contains invalid characters. Please check your string and try again.");
                 }
             }
         }
 
-        private static void ValidateFirstCharacter(string input)
+        private static void ValidateFirstCharacter(string gameInput)
         {
             // Should only contains defined valid characters
             var validStarter = new List<char>() { 'X', '-', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
 
-            if (!validStarter.Contains(input[0]))
+            if (!validStarter.Contains(gameInput[0]))
             {
-                throw new InvalidInputException("Entered string starts with invalid character.");
+                throw new InvalidInputException("Entered string starts with invalid character. Please check your string and try again.");
             }
         }
 
-        private static void ValidateNumberOfFrames(string input)
+        private static void ValidateNumberOfFrames(string gameInput)
         {
-            // Should contains eleven '|' symbols
-            int countBarSymbols = 0;
+            // Game string should contains eleven '|' symbols
+            int barSymbolsCount = 0;
 
-            for (int i = 0; i < input.Length; i++)
+            for (int i = 0; i < gameInput.Length; i++)
             {
-                if (input[i] == '|')
+                if (gameInput[i] == '|')
                 {
-                    countBarSymbols++;
+                    barSymbolsCount++;
                 }
             }
 
-            if (countBarSymbols != 11)
+            if (barSymbolsCount != 11)
             {
-                throw new InvalidInputException("The number of frames is not correct.");
+                throw new InvalidInputException("Entered string is in invalid format. Please check your string and try again.");
             }
         }
 
         private void ValidateRegularFrame(string regularFrame)
         {
             // Frame cannot start with the Spare symbol
-            var marks = regularFrame.Split('|');
+            // marksArray [ "12", "11", "X", "4/", "-8"]
+            var marksArray = regularFrame.Split('|');
 
-            if (marks.Any(x => x.StartsWith("/")))
+            if (marksArray.Any(x => x.StartsWith("/")))
             {
-                throw new InvalidInputException("Frame cannot start with '/' symbol.");
+                throw new InvalidInputException("Frame cannot start with '/' symbol. Please check your string and try again.");
             }
 
-            if (marks.Any(x => !x.Contains("X") && x.Length != 2))
+            if (marksArray.Any(x => !x.Contains("X") && x.Length != 2))
             {
-                throw new InvalidInputException("Frame is missing characters.");
+                throw new InvalidInputException("Frame is missing characters. Please check your string and try again.");
             }
 
-            if (marks.Any(x => x.Contains("X") && x.Length > 1))
+            if (marksArray.Any(x => x.Contains("X") && x.Length > 1))
             {
-                throw new InvalidInputException("Regular frame cannot contain an 'X' and another symbol.");
+                throw new InvalidInputException("Regular frame cannot contain an 'X' and another symbol. Please check your string and try again.");
             }
 
             // Regular frame sum cannot exceed ten points
-            if (marks.Any(x => int.TryParse(x, out var value) && value > 10))
+            foreach (var frame in marksArray) 
             {
-                throw new InvalidInputException("Sum of regular frame cannot exceed 10 points.");
+                ValidateFrameTotal(frame);
+            }
+        }
+
+        private void ValidateFrameTotal(string frame)
+        {
+            // Frame consists of one or two characters. ex. [ "12", "11", "X", "4/", "-8"]
+            if (!int.TryParse(frame[0].ToString(), out int firstBall))
+            {
+                return;
+            }
+            if (!int.TryParse(frame[1].ToString(), out int secondBall))
+            {
+                return;
+            }
+            if (firstBall + secondBall > 10)
+            {
+                throw new InvalidInputException("Sum of regular frame cannot exceed 10 points. Please check your string and try again.");
             }
         }
 
         private string ValidateBonusFrame(string bonusFrame)
         {
-            // Bonus frame cannot start with bonus symbol
+            // Bonus frame cannot start with a spare symbol
             if (bonusFrame.Length > 0)
             {
                 if (bonusFrame[0] == '/')
                 {
-                    throw new InvalidInputException("Bonus frame cannot start with spare symbol.");
+                    throw new InvalidInputException("Bonus frame cannot start with spare symbol. Please check your string and try again.");
                 }
+            }
+
+            // Bonus frame cannot be longer than two characters
+            if (bonusFrame.Length > 2)
+            {
+                throw new InvalidInputException("Bonus frame cannot have more than two chatacters. Please check your string and try again.");
             }
 
             return string.Empty;

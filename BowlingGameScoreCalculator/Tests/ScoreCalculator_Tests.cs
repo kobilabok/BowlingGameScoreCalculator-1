@@ -8,93 +8,102 @@ namespace BowlingGameScoreCalculator.Tests
     public class ScoreCalculator_Tests
     {
         [TestMethod]
-        public void RollGutterGame_ExpectedScore_Zero()
+        public void RollAllZerosGame_ExpectedScore_Zero()
         {
-            var stringInput = "--|--|--|--|--|--|--|--|--|--||";
+            var gameInput = "--|--|--|--|--|--|--|--|--|--||";
+            int gameScore = ConvertStringAndCalculateTotal(gameInput);
 
-            var game = new ScoreCalculator(stringInput);
-
-            game.CalculateScore().Should().Be(0);
+            gameScore.Should().Be(0);
         }
 
         [TestMethod]
         public void RollMissAndSpareInSameFrame_ExpectedScore_50()
         {
-            var stringInput = "-/|X|X|--|--|--|--|--|--|--||";
+            var gameInput = "-/|X|X|--|--|--|--|--|--|--||";
+            int gameScore = ConvertStringAndCalculateTotal(gameInput);
 
-            var game = new ScoreCalculator(stringInput);
-
-            game.CalculateScore().Should().Be(50);
+            gameScore.Should().Be(50);
         }
 
         [TestMethod]
         public void RollAllOnes_ExpectedScore_20()
         {
-            var stringInput = "11|11|11|11|11|11|11|11|11|11||";
+            var gameInput = "11|11|11|11|11|11|11|11|11|11||";
+            int gameScore = ConvertStringAndCalculateTotal(gameInput);
 
-            var game = new ScoreCalculator(stringInput);
-
-            game.CalculateScore().Should().Be(20);
+            gameScore.Should().Be(20);
         }
+
 
         [TestMethod]
         public void RollAllStrike_ExpectedScore_300()
         {
-            var stringInput = "X|X|X|X|X|X|X|X|X|X||XX";
+            var gameInput = "X|X|X|X|X|X|X|X|X|X||XX";
+            int gameScore = ConvertStringAndCalculateTotal(gameInput);
 
-            var game = new ScoreCalculator(stringInput);
-
-            game.CalculateScore().Should().Be(300);
+            gameScore.Should().Be(300);
         }
 
         [TestMethod]
         public void RollAllNineAndMiss_ExpectedScore_90()
         {
-            var stringInput = "9-|9-|9-|9-|9-|9-|9-|9-|9-|9-||";
+            var gameInput = "9-|9-|9-|9-|9-|9-|9-|9-|9-|9-||";
+            int gameScore = ConvertStringAndCalculateTotal(gameInput);
 
-            var game = new ScoreCalculator(stringInput);
-
-            game.CalculateScore().Should().Be(90);
+            gameScore.Should().Be(90);
         }
 
         [TestMethod]
         public void RollAllSpareFives_ExpectedScore_150()
         {
-            var stringInput = "5/|5/|5/|5/|5/|5/|5/|5/|5/|5/||5";
+            var gameInput = "5/|5/|5/|5/|5/|5/|5/|5/|5/|5/||5";
 
-            var game = new ScoreCalculator(stringInput);
+            int gameScore = ConvertStringAndCalculateTotal(gameInput);
 
-            game.CalculateScore().Should().Be(150);
+            gameScore.Should().Be(150);
         }
 
         [TestMethod]
         public void RollRandomPins_WithBonus_ExpectedScore_167()
         {
-            var stringInput = "X|7/|9-|X|-8|8/|-6|X|X|X||81";
+            var gameInput = "X|7/|9-|X|-8|8/|-6|X|X|X||81";
+            int gameScore = ConvertStringAndCalculateTotal(gameInput);
 
-            var game = new ScoreCalculator(stringInput);
-
-            game.CalculateScore().Should().Be(167);
+            gameScore.Should().Be(167);
         }
 
         [TestMethod]
         public void RollRandomPins_WithoutBonus_ExpectedScore_120()
         {
-            var stringInput = "5-|7/|9-|X|-8|8/|-6|X|X|5-||";
+            var gameInput = "5-|7/|9-|X|-8|8/|-6|X|X|5-||";
+            int gameScore = ConvertStringAndCalculateTotal(gameInput);
 
-            var game = new ScoreCalculator(stringInput);
-
-            game.CalculateScore().Should().Be(120);
+            gameScore.Should().Be(120);
         }
 
         [TestMethod]
         public void RollRandomPins_WithStrikeBonus_ExpectedScore_180()
         {
-            var stringInput = "X|7/|9-|X|-8|8/|-6|X|X|X||XX";
+            var gameInput = "X|7/|9-|X|-8|8/|-6|X|X|X||XX";
 
-            var game = new ScoreCalculator(stringInput);
+            int gameScore = ConvertStringAndCalculateTotal(gameInput);
 
-            game.CalculateScore().Should().Be(180);
+            gameScore.Should().Be(180);
+        }
+
+        // Helper method
+        private static int ConvertStringAndCalculateTotal(string gameInput)
+        {
+            // Validate game string
+            new ConsoleInputValidator().ValidateGameInputFormat(gameInput);
+
+            // Convert game string
+            var convertedGameInput = new ConsoleInputConverter().ConvertToPinsKnockedDown(gameInput);
+
+            // Calculate game total score
+            var gameScore = new ScoreCalculator(convertedGameInput).CalculateScore();
+
+            return gameScore;
         }
     }
 }

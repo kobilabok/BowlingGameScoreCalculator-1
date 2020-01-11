@@ -1,15 +1,17 @@
 ﻿using BowlingGameScoreCalculator.Code;
-using BowlingGameScoreCalculator.Exceptions;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BowlingGameScoreCalculator
 {
     /// <summary>
-    /// Basic validations have been added but I assume that string will be in valid format.
+    /// Program flow:
+    /// 1. Read game string input from the console.
+    /// 2. Validate game string.
+    /// 3. Convert game string.
+    /// 4. Calculate Total Score.
+    /// 5. Display score to the console.
+    /// Note: Basic validations have been added but I assume that string will be in valid format.
     /// </summary>
     public class Program
     {
@@ -36,10 +38,10 @@ namespace BowlingGameScoreCalculator
 
             var listExamples = new List<string>
             {
-                "X|7/|9-|X|-8|8/|-6|X|X|X||81",
                 "X|X|X|X|X|X|X|X|X|X||XX",
                 "9-|9-|9-|9-|9-|9-|9-|9-|9-|9-||",
                 "5/|5/|5/|5/|5/|5/|5/|5/|5/|5/||5",
+                "X|7/|9-|X|-8|8/|-6|X|X|X||81",
                 "5-|7/|9-|X|-8|8/|-6|X|X|X||81",
                 "X|7/|9-|X|-8|8/|-6|X|X|X||XX",
                 "--|--|--|--|--|--|--|--|--|--||"
@@ -47,56 +49,72 @@ namespace BowlingGameScoreCalculator
 
             Console.WriteLine("Examples:\n");
 
-            foreach (string item in listExamples)
-                Console.WriteLine(item);
+            foreach (string example in listExamples)
+                Console.WriteLine(example);
 
             Console.Write(Environment.NewLine);
         }
 
         static void CalculateTotalScore()
         {
-            string consoleInput;
+            string gameInput;
+
+            do
+            {
+                Console.Write("Bowling game: ");
+                gameInput = Console.ReadLine();
+            }
+            while (!ValidateGameInput(gameInput));
+
+            // Convert game string
+            var convertedGameInput = new ConsoleInputConverter().ConvertToPinsKnockedDown(gameInput);
+
+            // Calculate game total score
+            var gameScore = new ScoreCalculator(convertedGameInput).CalculateScore();
+
+            // Display total score
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"Total Score: {gameScore}");
+            Console.ResetColor();
+        }
+
+        static bool ValidateGameInput(string gameInput)
+        {
+            var validator = new ConsoleInputValidator();
 
             try
             {
-                Console.Write("List of pins: ");
-
-                consoleInput = Console.ReadLine();
-                var getScore = new ScoreCalculator(consoleInput);
-
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"Total Score: {getScore.CalculateScore()}");
-            }
-            catch (InvalidInputException ex)
-            {
-                Console.ForegroundColor = ConsoleColor.DarkYellow;
-                Console.WriteLine($"Input error: {ex.Message}");
+                validator.ValidateGameInputFormat(gameInput);
             }
             catch (Exception ex)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
+                Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine(ex.Message);
-            }
-            finally
-            {
+                
+                Console.Write(Environment.NewLine);
                 Console.ResetColor();
+
+                return false;
             }
+
+            return true;
         }
 
         static bool ShouldCalculateAnotherGame()
         {
-            bool quit = false;
+            bool quitCalculator = false;
             char selection = ' ';
 
             while (!selection.Equals('Y') && !selection.Equals('N'))
             {
-                Console.WriteLine($"\nPlay again? Y / N");
+                Console.WriteLine($"\nCalculate another game? Y / N");
                 string userInput = Console.ReadLine().ToUpper();
 
                 if (char.TryParse(userInput, out selection))
                 {
                     if (selection.Equals('Y'))
                     {
+                        Console.Write(Environment.NewLine);
                         return true;
                     }
 
@@ -104,17 +122,17 @@ namespace BowlingGameScoreCalculator
                     {
                         Console.Clear();
                         Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine("Thanks for playing! Goodbye!");
+                        Console.WriteLine("Thanks for using our calculator! Hope to see you soon!");
                         return false;
                     }
                 }
 
-                Console.ForegroundColor = ConsoleColor.Red;
+                Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine("Invalid selection. Please Try again.");
                 Console.ResetColor();
             }
 
-            return quit;
+            return quitCalculator;
         }
     }
 }

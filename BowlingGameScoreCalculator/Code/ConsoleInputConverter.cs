@@ -6,38 +6,30 @@ namespace BowlingGameScoreCalculator.Code
     public class ConsoleInputConverter
     {
         /// <summary>
-        /// This class takes string in a valid format from the console and converts it into a list of integers.
+        /// This class takes game string in the valid format and converts it into a list of integers.
         /// </summary>
         readonly List<int> pins = new List<int>();
-        public string InputGameString { get; set; }
-
-        public ConsoleInputConverter(string consoleInput)
+        public List<int> ConvertToPinsKnockedDown(string gameInput)
         {
-            new ConsoleInputValidator().ValidateStringFormat(consoleInput);
-            InputGameString = consoleInput;
-        }
+            char[] chararters = gameInput.ToCharArray();
 
-        public List<int> ConvertToPinsKnockedDown()
-        {
-            char[] chars = InputGameString.ToCharArray();
-
-            for (int i = 0; i < chars.Length; i++)
+            for (int i = 0; i < chararters.Length; i++)
             {
-                switch (chars[i])
+                switch (chararters[i])
                 {
+                    case '|':
+                        break;
                     case '-':
                         pins.Add(0);
-                        break;
-                    case '/':
-                        pins.Add(10 - ConvertCharToInt(chars[i - 1]));
                         break;
                     case 'X':
                         pins.Add(10);
                         break;
-                    case '|':
-                        break;
+                    case '/':
+                        pins.Add(10 - ConvertCharToInt(chararters[i - 1]));
+                        break;                   
                     default:
-                        pins.Add(ConvertCharToInt(chars[i]));
+                        pins.Add(ConvertCharToInt(chararters[i]));
                         break;
                 }
             }

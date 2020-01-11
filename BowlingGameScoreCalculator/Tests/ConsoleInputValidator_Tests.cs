@@ -9,197 +9,178 @@ namespace BowlingGameScoreCalculator.Tests
     [TestClass]
     public class ConsoleInputValidator_Tests
     {
-        private readonly ConsoleInputValidator consoleInput = new ConsoleInputValidator();
+        private readonly ConsoleInputValidator validator = new ConsoleInputValidator();
 
+        #region Game String Tests
         [TestMethod]
-        public void Validate_EmptyString_MessageExpected()
+        public void Validate_EmptyString_InvalidInputExceptionExpected()
         {
-            var input = "";
+            var gameInput = "";
 
-            Action act = () => consoleInput.ValidateStringFormat(input);
+            Action act = () => validator.ValidateGameInputFormat(gameInput);
 
             act.Should().Throw<InvalidInputException>()
-                .WithMessage("Cannot be blank or have white spaces. Please try again.");
+                .WithMessage("Game input cannot be blank or have white spaces. Please try again.");
         }
 
         [TestMethod]
-        public void Validate_WhiteSpacesString_MessageExpected()
+        public void Validate_WhiteSpacesString_InvalidInputExceptionExpected()
         {
-            var input = "                    ";
+            var gameInput = "    ";
 
-            Action act = () => consoleInput.ValidateStringFormat(input);
+            Action act = () => validator.ValidateGameInputFormat(gameInput);
 
             act.Should().Throw<InvalidInputException>()
-                .WithMessage("Cannot be blank or have white spaces. Please try again.");
+                .WithMessage("Game input cannot be blank or have white spaces. Please try again.");
         }
 
         [TestMethod]
-        public void Validate_StringLength_StringWithLessThan21Chars_MessageExpected()
+        public void Validate_AllowedRangeWithInvalidCharacterString_InvalidInputExceptionExpected()
         {
-            var input = "12|34|56|78|91||";
+            var gameInput = "--|S|--|--|--|--|--|--|--|--||";
 
-            Action act = () => consoleInput.ValidateStringFormat(input);
+            Action act = () => validator.ValidateGameInputFormat(gameInput);
 
             act.Should().Throw<InvalidInputException>()
-                .WithMessage("Entered string is either too long or too short. Please try again.");
+                .WithMessage("Entered string contains invalid characters. Please check your string and try again.");
         }
 
         [TestMethod]
-        public void Validate_StringLength_StringWithGreaterThan32Chars_MessageExpected()
+        public void Validate_StringCannotExceedElevenFrames_InvalidInputExceptionExpected()
         {
-            var input = "12|34|56|78|91|12|34|56|78|91|89||";
+            var gameInput = "X|X|X|X|X|X|X|X|X|X|X|X|X||XX";
 
-            Action act = () => consoleInput.ValidateStringFormat(input);
+            Action act = () => validator.ValidateGameInputFormat(gameInput);
 
             act.Should().Throw<InvalidInputException>()
-                .WithMessage("Entered string is either too long or too short. Please try again.");
+                .WithMessage("Entered string is in invalid format. Please check your string and try again.");
         }
 
         [TestMethod]
-        public void Validate_LettersAndNumbersInAllowedRangeString_MessageExpected()
+        public void Validate_ValidStringInLowerCase_NoExceptionExpected()
         {
-            var input = "12|3|456|789|0qw|erty|uiop|1234|567";
+            var gameInput = "x|x|x|x|x|x|x|x|x|x||xx";
 
-            Action act = () => consoleInput.ValidateStringFormat(input);
+            Action act = () => validator.ValidateGameInputFormat(gameInput);
+
+            act.Should().NotThrow(because: "This frame is valid but in lower case. ");
+        }
+
+        [TestMethod]
+        public void Validate_ValidString_NoExceptionExpected()
+        {
+            var gameInput = "--|7/|--|--|--|--|--|--|--|--||";
+
+            Action act = () => validator.ValidateGameInputFormat(gameInput);
+
+            act.Should().NotThrow(because: "String is in valid format. Please check your string and try again.");
+        }
+
+        #endregion
+
+        #region Regular Frame Tests
+
+        [TestMethod]
+        public void Validate_RegularFrameCantStartWithSpareSymbol_InvalidInputExceptionExpected()
+        {
+            var gameInput = "/|--|--|--|--|--|--|--|--|--||";
+
+            Action act = () => validator.ValidateGameInputFormat(gameInput);
 
             act.Should().Throw<InvalidInputException>()
-                .WithMessage("Entered string is either too long or too short. Please try again.");
+                .WithMessage("Entered string starts with invalid character. Please check your string and try again.");
         }
 
         [TestMethod]
-        public void Validate_AllowedRangeWithBarSymbolsAndInvalidCharacterString_MessageExpected()
+        public void Validate_RegularFrameCantStartWithBarSymbol_InvalidInputExceptionExpected()
         {
-            var input = "X|X|A|A|A|A|A|A|A|A||";
+            var gameInput = "|--|--|--|--|--|--|--|--|--||";
 
-            Action act = () => consoleInput.ValidateStringFormat(input);
+            Action act = () => validator.ValidateGameInputFormat(gameInput);
 
             act.Should().Throw<InvalidInputException>()
-                .WithMessage("Entered string contains invalid characters.");
+                .WithMessage("Entered string starts with invalid character. Please check your string and try again.");
         }
 
         [TestMethod]
-        public void Validate_ValidStringInLowerCase_NoMessageExpected()
+        public void Validate_RegularFrameCantHaveMoreThanOneStrikeSymbols_InvalidInputExceptionExpected()
         {
-            var input = "x|x|x|x|x|x|x|x|x|x||xx";
+            var gameInput = "--|XX|--|--|--|--|--|--|--|--||";
 
-            Action act = () => consoleInput.ValidateStringFormat(input);
-
-            act.Should().NotThrow(because: "This frame is valid but in lower case.");
-        }
-
-        [TestMethod]
-        public void Validate_ValidString_NoMessageExpected()
-        {
-            var input = "5-|7/|9-|X|-8|8/|-6|X|X|5-||";
-
-            Action act = () => consoleInput.ValidateStringFormat(input);
-
-            act.Should().NotThrow(because: "String is in valid format.");
-        }
-
-
-        [TestMethod]
-        public void Validate_FrameCantStartWith_SpareSymbol()
-        {
-            var input = "/|19|9-|X|-8|8/|-6|X|X|X||XX";
-
-            Action act = () => consoleInput.ValidateStringFormat(input);
+            Action act = () => validator.ValidateGameInputFormat(gameInput);
 
             act.Should().Throw<InvalidInputException>()
-                .WithMessage("Entered string starts with invalid character.");
+                .WithMessage("Regular frame cannot contain an 'X' and another symbol. Please check your string and try again.");
         }
 
         [TestMethod]
-        public void Validate_FrameCantStartWith_BarSymbol()
+        public void Validate_RegularFrameCantHaveOneCharacterIfItIsNotStrike_InvalidInputExceptionExpected()
         {
-            var input = "|--|--|--|--|--|--|--|--|--||";
+            var gameInput = "--|8|--|--|--|--|--|--|--|--||";
 
-            Action act = () => consoleInput.ValidateStringFormat(input);
+            Action act = () => validator.ValidateGameInputFormat(gameInput);
 
             act.Should().Throw<InvalidInputException>()
-                .WithMessage("Entered string starts with invalid character.");
+                .WithMessage("Frame is missing characters. Please check your string and try again.");
         }
 
         [TestMethod]
-        public void Validate_FrameCantHaveMoreThanOne_X()
+        public void Validate_RegularFrameScoreCantExceedTen_InvalidInputExceptionExpected()
         {
-            var input = "--|XX|--|--|--|--|--|--|--|--||";
+            var gameInput = "--|99|--|--|--|--|--|--|--|--||";
 
-            Action act = () => consoleInput.ValidateStringFormat(input);
+            Action act = () => validator.ValidateGameInputFormat(gameInput);
 
             act.Should().Throw<InvalidInputException>()
-                .WithMessage("Regular frame cannot contain an 'X' and another symbol.");
+                .WithMessage("Sum of regular frame cannot exceed 10 points. Please check your string and try again.");
         }
 
         [TestMethod]
-        public void Validate_FrameCantHaveOneCharacterIfItIsNot_X()
+        public void Validate_RegularFrameCantHaveMoreThanOneSpareSymbol_InvalidInputExceptionException()
         {
-            var input = "--|8|--|--|--|--|--|--|--|--||";
+            var gameInput = "--|//|--|--|--|--|--|--|--|--||";
 
-            Action act = () => consoleInput.ValidateStringFormat(input);
+            Action act = () => validator.ValidateGameInputFormat(gameInput);
 
             act.Should().Throw<InvalidInputException>()
-                .WithMessage("Frame is missing characters.");
+                .WithMessage("Frame cannot start with '/' symbol. Please check your string and try again.");
         }
 
-        [TestMethod]
-        public void Validate_FrameScoreCantExceedTen()
-        {
-            var input = "--|99|--|--|--|--|--|--|--|--||";
+        #endregion
 
-            Action act = () => consoleInput.ValidateStringFormat(input);
-
-            act.Should().Throw<InvalidInputException>()
-                .WithMessage("Sum of regular frame cannot exceed 10 points.");
-        }
+        #region Bonus Frame Tests
 
         [TestMethod]
-        public void Validate_FrameCantHaveMoreThanOne_SpareSymbol()
+        public void Validate_BonusFrameCanHaveTwoStrikes_NoExceptionExpected()
         {
-            var input = "5-|//|9-|X|-8|8/|-6|X|X|9-||";
+            var gameInput = "--|--|--|--|--|--|--|--|--|X||XX";
 
-            Action act = () => consoleInput.ValidateStringFormat(input);
-
-            act.Should().Throw<InvalidInputException>()
-                .WithMessage("Frame cannot start with '/' symbol.");
-        }
-
-        [TestMethod]
-        public void Validate_BonusFrameCanHave_TwoStrikes()
-        {
-            var input = "X|7/|9-|X|-8|8/|-6|X|X|X||XX";
-
-            Action act = () => consoleInput.ValidateStringFormat(input);
+            Action act = () => validator.ValidateGameInputFormat(gameInput);
 
             act.Should().NotThrow<InvalidInputException>();
         }
 
         [TestMethod]
-        public void Validate_BonusFrameCantStartWith_SpareSymbol()
+        public void Validate_BonusFrameCantStartWithSpareSymbol_InvalidInputExceptionExpected()
         {
-            var input = "X|7/|9-|X|-8|8/|-6|X|X|X||//";
+            var gameInput = "--|--|--|--|--|--|--|--|--|X||//";
 
-            Action act = () => consoleInput.ValidateStringFormat(input);
+            Action act = () => validator.ValidateGameInputFormat(gameInput);
 
             act.Should().Throw<InvalidInputException>()
-                .WithMessage("Bonus frame cannot start with spare symbol.");
+                .WithMessage("Bonus frame cannot start with spare symbol. Please check your string and try again.");
         }
 
         [TestMethod]
-        public void Validate_StringCannotExceedElevenFrames()
+        public void Validate_BonusFrameCantHaveMoreThanTwoCharacters_InvalidInputExceptionExpected()
         {
-            var input = "X|X|X|X|X|X|X|X|X|X|X|X|X||XX";
+            var gameInput = "--|--|--|--|--|--|--|--|--|X||342";
 
-            Action act = () => consoleInput.ValidateStringFormat(input);
+            Action act = () => validator.ValidateGameInputFormat(gameInput);
 
             act.Should().Throw<InvalidInputException>()
-                .WithMessage("The number of frames is not correct.");
-
-            //var convertInput = new ConsoleInputConverter();
-
-            //var game = new ScoreCalculator(convertInput.ConvertToPinsKnockedDown(stringInput));
-
-            //game.CalculateScore().Should().Be(300);
+                .WithMessage("Bonus frame cannot have more than two chatacters. Please check your string and try again.");
         }
     }
+    #endregion
 }
