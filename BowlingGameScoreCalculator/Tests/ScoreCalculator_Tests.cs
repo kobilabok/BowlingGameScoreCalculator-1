@@ -53,7 +53,7 @@ namespace BowlingGameScoreCalculator.Tests
         }
 
         [TestMethod]
-        public void RollAllSpareFives_ExpectedScore_150()
+        public void RollAllFivesAndSpare_ExpectedScore_150()
         {
             var gameInput = "5/|5/|5/|5/|5/|5/|5/|5/|5/|5/||5";
 
@@ -91,7 +91,7 @@ namespace BowlingGameScoreCalculator.Tests
         }
 
         // Helper method
-        private static int ConvertStringAndCalculateTotal(string gameInput)
+        private int ConvertStringAndCalculateTotal(string gameInput)
         {
             // Validate game string
             new ConsoleInputValidator().ValidateGameInputFormat(gameInput);

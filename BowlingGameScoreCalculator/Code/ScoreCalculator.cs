@@ -52,7 +52,7 @@ namespace BowlingGameScoreCalculator.Code
         private int CalculateSpareScore(int throwIndex)
         {
             // When calculating spare score, I'm on the first ball of the frame, the sum of current ball and the second ball 
-            // would be ten and in order to satisfy Spare I have to jump over a second ball of current frame and grab first ball
+            // would be ten and in order to satisfy Spare I have to jump over a second ball of current frame and grab the first ball
             // of next frame. 
             return 10 + Pins[throwIndex + 2];
         }

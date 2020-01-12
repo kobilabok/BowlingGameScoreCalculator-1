@@ -41,7 +41,6 @@ namespace BowlingGameScoreCalculator.Code
             // Validate bonus frame
             ValidateBonusFrame(bonusFrameString);
         }
-
         private void ValidateInputCharacters(string gameInput)
         {
             // Game string could only consist of the defined valid characters
@@ -55,7 +54,6 @@ namespace BowlingGameScoreCalculator.Code
                 }
             }
         }
-
         private void ValidateFirstCharacter(string gameInput)
         {
             // Game string could only start with one of the defined valid characters
@@ -66,7 +64,6 @@ namespace BowlingGameScoreCalculator.Code
                 throw new InvalidGameInputException("Entered string starts with invalid character. Please check your string and try again.");
             }
         }
-
         private void ValidateNumberOfFrames(string gameInput)
         {
             // Game string should contain eleven '|' symbols, else it's invalid string.
@@ -85,7 +82,6 @@ namespace BowlingGameScoreCalculator.Code
                 throw new InvalidGameInputException("Entered string is in invalid format. Please check your string and try again.");
             }
         }
-
         private void ValidateRegularFrame(string regularFrame)
         {
             // Regular frame cannot start with the Spare symbol
@@ -113,7 +109,6 @@ namespace BowlingGameScoreCalculator.Code
                 ValidateRegularFrameTotal(frame);
             }
         }
-
         private void ValidateRegularFrameTotal(string regularFrame)
         {
             // Regular frame consists of one or two characters. ex. [ "12", "11", "X", "4/", "-8"]
@@ -132,7 +127,6 @@ namespace BowlingGameScoreCalculator.Code
                 throw new InvalidGameInputException("Sum of regular frame cannot exceed 10 points. Please check your string and try again.");
             }
         }
-
         private string ValidateBonusFrame(string bonusFrame)
         {
             // Bonus frame cannot start with a spare symbol
@@ -150,7 +144,37 @@ namespace BowlingGameScoreCalculator.Code
                 throw new InvalidGameInputException("Bonus frame cannot have more than two chatacters. Please check your string and try again.");
             }
 
+            ValidateBonusFrameSum(bonusFrame);
+
             return string.Empty;
+        }
+        private void ValidateBonusFrameSum(string bonusFrame)
+        {
+            if (bonusFrame.Length > 0)
+            {
+                //Bonus frame sum cannot be greater than ten if first ball isn't a Strike
+                if (bonusFrame[0] != 'X')
+                {
+                    if (!int.TryParse(bonusFrame[0].ToString(), out int firstBall))
+                    {
+                        return;
+                    }
+
+                    int secondBall = 0;
+                    if (bonusFrame.Length > 1)
+                    {
+                        if (!int.TryParse(bonusFrame[1].ToString(), out secondBall))
+                        {
+                            return;
+                        }
+                    }
+                    
+                    if (firstBall + secondBall > 10)
+                    {
+                        throw new InvalidGameInputException("Bonus frame sum cannot exceed 10 points if first ball isn't a strike. Please check your string and try again.");
+                    }
+                }
+            }
         }
     }
 }

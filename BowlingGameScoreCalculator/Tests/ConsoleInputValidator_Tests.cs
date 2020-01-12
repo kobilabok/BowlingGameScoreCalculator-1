@@ -13,7 +13,7 @@ namespace BowlingGameScoreCalculator.Tests
 
         #region Game String Tests
         [TestMethod]
-        public void Validate_EmptyString_InvalidInputExceptionExpected()
+        public void Validate_EmptyString_InvalidGameInputExceptionExpected()
         {
             var gameInput = "";
 
@@ -24,7 +24,7 @@ namespace BowlingGameScoreCalculator.Tests
         }
 
         [TestMethod]
-        public void Validate_WhiteSpacesString_InvalidInputExceptionExpected()
+        public void Validate_WhiteSpacesString_InvalidGameInputExceptionExpected()
         {
             var gameInput = "    ";
 
@@ -35,7 +35,7 @@ namespace BowlingGameScoreCalculator.Tests
         }
 
         [TestMethod]
-        public void Validate_AllowedRangeWithInvalidCharacterString_InvalidInputExceptionExpected()
+        public void Validate_StringWithInvalidCharacter_InvalidGameInputExceptionExpected()
         {
             var gameInput = "--|S|--|--|--|--|--|--|--|--||";
 
@@ -46,7 +46,7 @@ namespace BowlingGameScoreCalculator.Tests
         }
 
         [TestMethod]
-        public void Validate_StringCannotExceedElevenFrames_InvalidInputExceptionExpected()
+        public void Validate_StringCannotExceedElevenFrames_InvalidGameInputExceptionExpected()
         {
             var gameInput = "X|X|X|X|X|X|X|X|X|X|X|X|X||XX";
 
@@ -81,7 +81,7 @@ namespace BowlingGameScoreCalculator.Tests
         #region Regular Frame Tests
 
         [TestMethod]
-        public void Validate_RegularFrameCantStartWithSpareSymbol_InvalidInputExceptionExpected()
+        public void Validate_RegularFrameCantStartWithSpareSymbol_InvalidGameInputExceptionExpected()
         {
             var gameInput = "/|--|--|--|--|--|--|--|--|--||";
 
@@ -92,7 +92,7 @@ namespace BowlingGameScoreCalculator.Tests
         }
 
         [TestMethod]
-        public void Validate_RegularFrameCantStartWithBarSymbol_InvalidInputExceptionExpected()
+        public void Validate_RegularFrameCantStartWithBarSymbol_InvalidGameInputExceptionExpected()
         {
             var gameInput = "|--|--|--|--|--|--|--|--|--||";
 
@@ -103,7 +103,7 @@ namespace BowlingGameScoreCalculator.Tests
         }
 
         [TestMethod]
-        public void Validate_RegularFrameCantHaveMoreThanOneStrikeSymbols_InvalidInputExceptionExpected()
+        public void Validate_RegularFrameCantHaveMoreThanOneStrikeSymbols_InvalidGameInputExceptionExpected()
         {
             var gameInput = "--|XX|--|--|--|--|--|--|--|--||";
 
@@ -114,7 +114,7 @@ namespace BowlingGameScoreCalculator.Tests
         }
 
         [TestMethod]
-        public void Validate_RegularFrameCantHaveOneCharacterIfItIsNotStrike_InvalidInputExceptionExpected()
+        public void Validate_RegularFrameCantHaveOneCharacterIfItIsNotStrike_InvalidGameInputExceptionExpected()
         {
             var gameInput = "--|8|--|--|--|--|--|--|--|--||";
 
@@ -125,9 +125,9 @@ namespace BowlingGameScoreCalculator.Tests
         }
 
         [TestMethod]
-        public void Validate_RegularFrameScoreCantExceedTen_InvalidInputExceptionExpected()
+        public void Validate_RegularFrameScoreCantExceedTen_InvalidGameInputExceptionExpected()
         {
-            var gameInput = "--|99|--|--|--|--|--|--|--|--||";
+            var gameInput = "--|92|--|--|--|--|--|--|--|--||";
 
             Action act = () => validator.ValidateGameInputFormat(gameInput);
 
@@ -136,7 +136,7 @@ namespace BowlingGameScoreCalculator.Tests
         }
 
         [TestMethod]
-        public void Validate_RegularFrameCantHaveMoreThanOneSpareSymbol_InvalidInputExceptionException()
+        public void Validate_RegularFrameCantHaveMoreThanOneSpareSymbol_InvalidGameInputExceptionException()
         {
             var gameInput = "--|//|--|--|--|--|--|--|--|--||";
 
@@ -161,7 +161,7 @@ namespace BowlingGameScoreCalculator.Tests
         }
 
         [TestMethod]
-        public void Validate_BonusFrameCantStartWithSpareSymbol_InvalidInputExceptionExpected()
+        public void Validate_BonusFrameCantStartWithSpareSymbol_InvalidGameInputExceptionExpected()
         {
             var gameInput = "--|--|--|--|--|--|--|--|--|X||//";
 
@@ -172,14 +172,25 @@ namespace BowlingGameScoreCalculator.Tests
         }
 
         [TestMethod]
-        public void Validate_BonusFrameCantHaveMoreThanTwoCharacters_InvalidInputExceptionExpected()
+        public void Validate_BonusFrameCantHaveMoreThanTwoCharacters_InvalidGameInputExceptionExpected()
         {
-            var gameInput = "--|--|--|--|--|--|--|--|--|X||342";
+            var gameInput = "--|--|--|--|--|--|--|--|--|X||234";
 
             Action act = () => validator.ValidateGameInputFormat(gameInput);
 
             act.Should().Throw<InvalidGameInputException>()
                 .WithMessage("Bonus frame cannot have more than two chatacters. Please check your string and try again.");
+        }
+
+        [TestMethod]
+        public void Validate_BonusFrameSumCantExceedTenIfFirstBallIsNotStrike_InvalidGameInputExceptionExpected()
+        {
+            var gameInput = "--|--|--|--|--|--|--|--|--|X||38";
+
+            Action act = () => validator.ValidateGameInputFormat(gameInput);
+
+            act.Should().Throw<InvalidGameInputException>()
+                .WithMessage("Bonus frame sum cannot exceed 10 points if first ball isn't a strike. Please check your string and try again.");
         }
     }
     #endregion

@@ -35,7 +35,6 @@ namespace BowlingGameScoreCalculator.Code
             }
             return pins;
         }
-
         private int ConvertCharToInt(Char value) => (int)(Char.GetNumericValue(value == '-' ? '0' : value));
     }
 }
