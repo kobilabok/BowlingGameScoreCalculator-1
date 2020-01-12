@@ -23,8 +23,10 @@ namespace BowlingGameScoreCalculator
 
             while (continuePlaying)
             {
+
                 CalculateTotalScore();
                 continuePlaying = ShouldCalculateAnotherGame();
+
             }
 
             Console.ReadKey();
@@ -90,7 +92,7 @@ namespace BowlingGameScoreCalculator
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine(ex.Message);
-                
+
                 Console.Write(Environment.NewLine);
                 Console.ResetColor();
 
