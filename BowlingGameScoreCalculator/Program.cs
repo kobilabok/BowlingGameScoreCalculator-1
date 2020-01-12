@@ -23,10 +23,8 @@ namespace BowlingGameScoreCalculator
 
             while (continuePlaying)
             {
-
                 CalculateTotalScore();
                 continuePlaying = ShouldCalculateAnotherGame();
-
             }
 
             Console.ReadKey();
