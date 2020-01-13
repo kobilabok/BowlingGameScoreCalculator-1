@@ -192,6 +192,39 @@ namespace BowlingGameScoreCalculator.Tests
             act.Should().Throw<InvalidGameInputException>()
                 .WithMessage("Bonus frame sum cannot exceed 10 points if first ball isn't a strike. Please check your string and try again.");
         }
+
+        [TestMethod]
+        public void Validate_BonusFrameMustHaveTwoBallsWhenTenthFrameIsStrike_InvalidGameInputExceptionExpected()
+        {
+            var gameInput = "--|--|--|--|--|--|--|--|--|X||";
+
+            Action act = () => validator.ValidateGameInputFormat(gameInput);
+
+            act.Should().Throw<InvalidGameInputException>()
+                .WithMessage("Bonus frame needs two balls because 10th frame is a Strike. Please check your string and try again.");
+        }
+
+        [TestMethod]
+        public void Validate_BonusFrameMustHaveOneBallWhenTenthFrameIsSpare_InvalidGameInputExceptionExpected()
+        {
+            var gameInput = "--|--|--|--|--|--|--|--|--|4/||";
+
+            Action act = () => validator.ValidateGameInputFormat(gameInput);
+
+            act.Should().Throw<InvalidGameInputException>()
+                .WithMessage("Bonus frame needs one ball because 10th frame is a Spare. Please check your string and try again.");
+        }
+
+        [TestMethod]
+        public void Validate_BonusFrameMustHaveNoBallsWhenTenthFrameNeitherStrikeOrSpare_InvalidGameInputExceptionExpected()
+        {
+            var gameInput = "--|--|--|--|--|--|--|--|--|4-||35";
+
+            Action act = () => validator.ValidateGameInputFormat(gameInput);
+
+            act.Should().Throw<InvalidGameInputException>()
+                .WithMessage("Bonus frame cannot have balls because 10th frame neither Strike or Spare. Please check your string and try again.");
+        }
     }
     #endregion
 }

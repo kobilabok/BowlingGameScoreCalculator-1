@@ -29,7 +29,7 @@ namespace BowlingGameScoreCalculator.Code
                 }
                 else
                 {
-                    gameScore += CalculateStandardScore(throwIndex);
+                    gameScore += CalculateRegularScore(throwIndex);
                     throwIndex += 2;
                 }
             }
@@ -39,7 +39,7 @@ namespace BowlingGameScoreCalculator.Code
         // Strike - is when the first ball in a frame knocks down all ten pins
         private bool IsStrike(int throwIndex) => Pins[throwIndex] == 10;
 
-        // Spare - is when the second ball in a frame knocks down all ten pins
+        // Spare - is when the first and second balls in a frame knock down all ten pins
         private bool IsSpare(int throwIndex) => Pins[throwIndex] + Pins[throwIndex + 1] == 10;
 
         // The score for the Stike frame is ten plus the total of the pins knocked down in the next two balls.
@@ -53,12 +53,12 @@ namespace BowlingGameScoreCalculator.Code
         {
             // When calculating spare score, I'm on the first ball of the frame, the sum of current ball and the second ball 
             // would be ten and in order to satisfy Spare I have to jump over a second ball of current frame and grab the first ball
-            // of next frame. 
+            // of the next frame. 
             return 10 + Pins[throwIndex + 2];
         }
 
-        // Standart score calculates pins knocked on first and second throws. 
-        private int CalculateStandardScore(int throwIndex)
+        // Regular score calculates pins knocked down on the first and second throws. 
+        private int CalculateRegularScore(int throwIndex)
         {
             return Pins[throwIndex] + Pins[throwIndex + 1];
         }
