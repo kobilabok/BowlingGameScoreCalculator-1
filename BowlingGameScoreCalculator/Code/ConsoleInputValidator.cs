@@ -33,13 +33,13 @@ namespace BowlingGameScoreCalculator.Code
             // Separate regular and bonus frames
             var bonusFrameIndex = gameInput.LastIndexOf("||", StringComparison.Ordinal);
             var regularFrameString = gameInput.Substring(0, bonusFrameIndex);
-            var bonusFrameString = gameInput.Substring(bonusFrameIndex + 2);
+            var bonusFrame = gameInput.Substring(bonusFrameIndex + 2);
 
             // Validate regular frame
             ValidateRegularFrame(regularFrameString);
 
             // Validate bonus frame
-            ValidateBonusFrame(bonusFrameString, regularFrameString);
+            ValidateBonusFrame(bonusFrame, regularFrameString);
         }
         private void ValidateInputCharacters(string gameInput)
         {
@@ -82,21 +82,23 @@ namespace BowlingGameScoreCalculator.Code
                 throw new InvalidGameInputException("Entered string is in invalid format. Please check your string and try again.");
             }
         }
-        private void ValidateRegularFrame(string regularFrame)
+        private void ValidateRegularFrame(string regularFrameString)
         {
-            // Regular frame cannot start with the Spare symbol
-            var frameArray = regularFrame.Split('|');
+            string[] frameArray = SplitRegularFrameString(regularFrameString);
 
+            // Regular frame cannot start with the Spare symbol
             if (frameArray.Any(x => x.StartsWith("/")))
             {
                 throw new InvalidGameInputException("Frame cannot start with '/' symbol. Please check your string and try again.");
             }
 
+            // Regular frame must be two characters long if it's not a Strike
             if (frameArray.Any(x => !x.Contains("X") && x.Length != 2))
             {
                 throw new InvalidGameInputException("Frame is missing characters. Please check your string and try again.");
             }
 
+            // Regular frame can be only one character if it's a Strike
             if (frameArray.Any(x => x.Contains("X") && x.Length > 1))
             {
                 throw new InvalidGameInputException("Regular frame cannot contain an 'X' and another symbol. Please check your string and try again.");
@@ -108,16 +110,20 @@ namespace BowlingGameScoreCalculator.Code
                 ValidateRegularFrameTotal(frame);
             }
         }
-        private int ValidateRegularFrameTotal(string regularFrame)
+        private string[] SplitRegularFrameString(string regularFrameString)
         {
-            // Regular frame consists of one or two characters. ex. [ "12", "11", "X", "4/", "-8"]
-            if (!int.TryParse(regularFrame[0].ToString(), out int firstBall))
+            return regularFrameString.Split('|');
+        }
+        private void ValidateRegularFrameTotal(string regularFrameString)
+        {
+            // Regular frame consists of one or two characters. ex. [ "12", "11"]
+            if (!int.TryParse(regularFrameString[0].ToString(), out int firstBall))
             {
-                return firstBall;
+                return;
             }
-            if (!int.TryParse(regularFrame[1].ToString(), out int secondBall))
+            if (!int.TryParse(regularFrameString[1].ToString(), out int secondBall))
             {
-                return secondBall;
+                return;
             }
 
             // Regular frame sum cannot be greater than ten
@@ -125,10 +131,8 @@ namespace BowlingGameScoreCalculator.Code
             {
                 throw new InvalidGameInputException("Sum of regular frame cannot exceed 10 points. Please check your string and try again.");
             }
-
-            return firstBall + secondBall;
         }
-        private void ValidateBonusFrame(string bonusFrame, string regularFrame)
+        private void ValidateBonusFrame(string bonusFrame, string regularFrameString)
         {
             // Bonus frame cannot start with a spare symbol
             if (bonusFrame.Length > 0)
@@ -145,13 +149,13 @@ namespace BowlingGameScoreCalculator.Code
                 throw new InvalidGameInputException("Bonus frame cannot have more than two chatacters. Please check your string and try again.");
             }
 
-            ValidateBonusFrameSum(bonusFrame);
+            ValidateBonusFrameTotal(bonusFrame);
 
-            ValidateBonusFrameLengthBasedOfTenthFrame(bonusFrame, regularFrame);
+            ValidateBonusFrameLengthBasedOfTenthFrame(bonusFrame, regularFrameString);
         }
         private void ValidateBonusFrameLengthBasedOfTenthFrame(string bonusFrame, string regularFrameString)
         {
-            var frameArray = regularFrameString.Split('|');
+            var frameArray = SplitRegularFrameString(regularFrameString);
             var tenthFrame = frameArray[9];
 
             // Bonus frame must have two balls when tenth frame is a Strike
@@ -172,7 +176,7 @@ namespace BowlingGameScoreCalculator.Code
                 throw new InvalidGameInputException("Bonus frame cannot have balls because 10th frame neither Strike or Spare. Please check your string and try again.");
             }
         }
-        private void ValidateBonusFrameSum(string bonusFrame)
+        private void ValidateBonusFrameTotal(string bonusFrame)
         {
             if (bonusFrame.Length > 0)
             {
