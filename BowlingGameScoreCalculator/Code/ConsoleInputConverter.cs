@@ -9,6 +9,7 @@ namespace BowlingGameScoreCalculator.Code
         /// This class takes game string in valid format and converts it into a list of integers.
         /// </summary>
         readonly List<int> pins = new List<int>();
+
         public List<int> ConvertToPinsKnockedDown(string gameInput)
         {
             char[] chararters = gameInput.ToCharArray();
@@ -35,6 +36,7 @@ namespace BowlingGameScoreCalculator.Code
             }
             return pins;
         }
+
         private int ConvertCharToInt(Char value) => (int)(Char.GetNumericValue(value == '-' ? '0' : value));
     }
 }
