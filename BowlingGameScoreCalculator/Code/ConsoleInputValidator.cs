@@ -218,9 +218,9 @@ namespace BowlingGameScoreCalculator.Code
         {
             var bonusFrameIndex = gameInput.LastIndexOf("||", StringComparison.OrdinalIgnoreCase);
 
-            RegularFramesString = gameInput.Substring(0, bonusFrameIndex);
+            RegularFramesString = gameInput.Substring(0, bonusFrameIndex).ToUpper();
 
-            BonusFrame = gameInput.Substring(bonusFrameIndex + 2);
+            BonusFrame = gameInput.Substring(bonusFrameIndex + 2).ToUpper();
 
             RegularFramesArray = RegularFramesString.Split('|');
         }

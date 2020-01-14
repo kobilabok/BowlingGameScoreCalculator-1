@@ -12,7 +12,7 @@ namespace BowlingGameScoreCalculator.Code
 
         public List<int> ConvertToPinsKnockedDown(string gameInput)
         {
-            char[] chararters = gameInput.ToCharArray();
+            char[] chararters = gameInput.ToUpper().ToCharArray();
 
             for (int i = 0; i < chararters.Length; i++)
             {

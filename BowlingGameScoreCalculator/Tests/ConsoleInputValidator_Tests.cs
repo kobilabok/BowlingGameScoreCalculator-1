@@ -67,6 +67,18 @@ namespace BowlingGameScoreCalculator.Tests
         }
 
         [TestMethod]
+        public void Validate_ValidStringInLowerCaseGetCalculated_ExpectedScore_300()
+        {
+            var gameInput = "x|x|x|x|x|X|x|x|X|x||xX";
+
+            var convertedInput = new ConsoleInputConverter().ConvertToPinsKnockedDown(gameInput);
+
+            var totalScore = new ScoreCalculator(convertedInput).CalculateScore();
+
+            totalScore.Should().Be(300);
+        }
+
+        [TestMethod]
         public void Validate_ValidString_NoExceptionExpected()
         {
             var gameInput = "--|7/|--|--|--|--|--|--|--|--||";
