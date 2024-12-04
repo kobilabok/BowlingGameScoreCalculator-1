@@ -71,9 +71,10 @@ namespace BowlingGameScoreCalculator.Tests
         {
             var gameInput = "x|x|x|x|x|X|x|x|X|x||xX";
 
-            var convertedInput = new ConsoleInputConverter().ConvertToPinsKnockedDown(gameInput);
+            var convertedGameInput = new ConsoleInputConverter()
+                .ConvertToPinsKnockedDown(gameInput);
 
-            var totalScore = new ScoreCalculator(convertedInput).CalculateScore();
+            var totalScore = new ScoreCalculator(convertedGameInput).CalculateScore();
 
             totalScore.Should().Be(300);
         }

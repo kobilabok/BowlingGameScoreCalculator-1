@@ -38,9 +38,26 @@ namespace BowlingGameScoreCalculator.Tests
         public void RollAllStrike_ExpectedScore_300()
         {
             var gameInput = "X|X|X|X|X|X|X|X|X|X||XX";
-            int gameScore = ConvertStringAndCalculateTotal(gameInput);
+
+            // Validate game string
+            new ConsoleInputValidator().ValidateGameInputFormat(gameInput);
+
+            // Convert game string
+            var convertor = new ConsoleInputConverter();
+            var convertedGameInput = convertor.ConvertToPinsKnockedDown(gameInput);
+
+            // Calculate game total score
+            var gameScore = new ScoreCalculator(convertedGameInput).CalculateScore();
 
             gameScore.Should().Be(300);
+
+            // # 2
+            gameInput = "9-|9-|9-|9-|9-|9-|9-|9-|9-|9-||";
+            convertedGameInput = convertor.ConvertToPinsKnockedDown(gameInput);
+            // Calculate game total score
+            gameScore = new ScoreCalculator(convertedGameInput).CalculateScore();
+
+            gameScore.Should().Be(90);
         }
 
         [TestMethod]

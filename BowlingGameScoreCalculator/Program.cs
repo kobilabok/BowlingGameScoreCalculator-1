@@ -59,7 +59,7 @@ namespace BowlingGameScoreCalculator
             do
             {
                 Console.Write("Bowling game: ");
-                gameInput = Console.ReadLine();
+                gameInput = Console.ReadLine().ToUpper();
             }
             while (!ValidateGameInput(gameInput));
 

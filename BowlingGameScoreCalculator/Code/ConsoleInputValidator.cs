@@ -14,6 +14,10 @@ namespace BowlingGameScoreCalculator.Code
         private string BonusFrame { get; set; }
         private string[] RegularFramesArray { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="consoleInput"></param>
         public void ValidateGameInputFormat(string consoleInput)
         {
             // Converts to upper case
@@ -25,10 +29,8 @@ namespace BowlingGameScoreCalculator.Code
                 throw new InvalidGameInputException("Game input cannot be blank or have white spaces. Please try again.");
             }
 
-            // Validate entire string
             ValidateEntireString(gameInput);
 
-            // Extract regular and bonus frames
             ExtractRegularAndBonusFrames(gameInput);
 
             // Validate regular frame
@@ -143,12 +145,12 @@ namespace BowlingGameScoreCalculator.Code
         private void ValidateBonusFrame(string bonusFrame)
         {
             // Bonus frame cannot start with a spare symbol
-            if (bonusFrame.Length > 0)
+            if (bonusFrame.Length > 0 && bonusFrame[0] == '/')
             {
-                if (bonusFrame[0] == '/')
-                {
+                //if (bonusFrame[0] == '/')
+                //{
                     throw new InvalidGameInputException("Bonus frame cannot start with spare symbol. Please check your string and try again.");
-                }
+                //}
             }
 
             // Bonus frame cannot be longer than two characters
